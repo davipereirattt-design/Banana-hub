@@ -1,0 +1,86 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+
+-- Configurações
+getgenv().gtHub = {
+    AutoKatakuri = false,
+    AutoBringMobs = false,
+    AutoAttack = false,
+    FastAttack = false
+}
+
+-- Função de notificação simples
+local function Notify(msg)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "gt Hub",
+        Text = msg,
+        Duration = 3
+    })
+end
+
+-- Auto Katakuri (exemplo básico - você precisa ajustar a posição do boss)
+spawn(function()
+    while true do
+        if getgenv().gtHub.AutoKatakuri then
+            -- Aqui você coloca a lógica de ir até o Katakuri
+            -- Exemplo (posição aproximada - pode precisar atualizar):
+            -- HumanoidRootPart.CFrame = CFrame.new(posição do Katakuri)
+            Notify("Auto Katakuri ativado")
+        end
+        task.wait(1)
+    end
+end)
+
+-- Auto Bring Mobs (puxa os mobs pra perto)
+spawn(function()
+    while true do
+        if getgenv().gtHub.AutoBringMobs then
+            for _, mob in pairs(workspace.Enemies:GetChildren()) do
+                if mob:FindFirstChild("HumanoidRootPart") and mob:FindFirstChild("Humanoid") and mob.Humanoid.Health > 0 then
+                    mob.HumanoidRootPart.CFrame = HumanoidRootPart.CFrame * CFrame.new(0, 0, -5)
+                end
+            end
+        end
+        task.wait(0.3)
+    end
+end)
+
+-- Auto Attack
+spawn(function()
+    while true do
+        if getgenv().gtHub.AutoAttack then
+            local tool = Character:FindFirstChildOfClass("Tool")
+            if tool then
+                tool:Activate()
+            end
+        end
+        task.wait(0.15)
+    end
+end)
+
+-- Fast Attack (deixa o ataque mais rápido)
+spawn(function()
+    while true do
+        if getgenv().gtHub.FastAttack then
+            -- Método simples de fast attack (pode precisar de ajuste)
+            local tool = Character:FindFirstChildOfClass("Tool")
+            if tool and tool:FindFirstChild("Cooldown") then
+                tool.Cooldown.Value = 0
+            end
+        end
+        task.wait(0.1)
+    end
+end)
+
+-- Interface simples (botões no chat por enquanto)
+print("=================================")
+print("       gt Hub Carregado!")
+print("=================================")
+print("Comandos:")
+print("getgenv().gtHub.AutoKatakuri = true/false")
+print("getgenv().gtHub.AutoBringMobs = true/false")
+print("getgenv().gtHub.AutoAttack = true/false")
+print("getgenv().gtHub.FastAttack = true/false")
+print("=================================")
